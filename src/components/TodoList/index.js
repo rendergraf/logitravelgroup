@@ -79,14 +79,14 @@ const TodoList = () => {
             icon={<RepeatClockIcon />}
             colorScheme="todo"
             onClick={undoLastDelete}
-            disabled={!actionHistory.length || loading}
+            isDisabled={!actionHistory.length || loading}
             variant="outline"
           />
           <Button
             rightIcon={<DeleteIcon />}
             colorScheme="todo"
             onClick={deleteSelectedTodos}
-            disabled={selectedTodos.length === 0}
+            isDisabled={selectedTodos.length === 0}
             variant="outline"
           >
             Delete
