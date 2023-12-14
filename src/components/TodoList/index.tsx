@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, FC} from "react";
 import {
   Box,
   Stack,
@@ -13,18 +13,20 @@ import {
 } from "@chakra-ui/react";
 import { RepeatClockIcon, DeleteIcon } from "@chakra-ui/icons";
 import { TodoContext } from "../Context";
-import { TodoItem, ModalTodo } from "../../components";
+import { TodoItem, ModalTodo } from "..";
+import type { TodoContextType, Todo } from "../../Types";
 
-const TodoList = () => {
+const TodoList: FC = () => {
+
   const {
-    todos,
+    todos = [],
     error,
     loading,
     undoLastDelete,
     deleteSelectedTodos,
     selectedTodos,
     actionHistory,
-  } = useContext(TodoContext);
+  } = useContext<TodoContextType>(TodoContext);
   return (
     <Box rounded={"20px"} bg={"white"} boxShadow={"lg"} p={8} mt={10} mb={20}>
       <VStack spacing={2} textAlign="center">
@@ -80,8 +82,7 @@ const TodoList = () => {
             colorScheme="todo"
             onClick={undoLastDelete}
             isDisabled={!actionHistory.length || loading}
-            variant="outline"
-          />
+            variant="outline" aria-label={""} />
           <Button
             rightIcon={<DeleteIcon />}
             colorScheme="todo"

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import {
   Flex,
   Button,
@@ -15,10 +15,12 @@ import {
 import { TodoContext } from "../Context";
 import { AddIcon } from "@chakra-ui/icons";
 
-const ModalTodo = () => {
-  const { isOpen, onOpen, onClose, initialRef, finalRef, crearTodo } =
-    useContext(TodoContext);
-  const addTodo = (text) => {
+const ModalTodo: React.FC = () => {
+  const { isOpen, onOpen, onClose, crearTodo } = useContext(TodoContext);
+  const initialRef = useRef<HTMLInputElement | null>(null);
+  const finalRef = useRef<HTMLInputElement | null>(null);
+
+  const addTodo = (text: string) => {
     crearTodo(text);
     onClose();
   };
@@ -47,7 +49,7 @@ const ModalTodo = () => {
                 ref={initialRef}
                 placeholder="Type the text here..."
                 onKeyDown={(event) => {
-                  if (event.key === "Enter" && initialRef.current.value) {
+                  if (event.key === "Enter" && initialRef.current?.value) {
                     addTodo(initialRef.current.value);
                   }
                 }}
@@ -57,7 +59,7 @@ const ModalTodo = () => {
           <ModalFooter gap={5}>
             <Button
               onClick={() =>
-                initialRef.current.value && addTodo(initialRef.current.value)
+                initialRef.current?.value && addTodo(initialRef.current.value)
               }
               colorScheme={"todo"}
             >

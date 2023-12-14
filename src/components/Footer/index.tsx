@@ -1,3 +1,4 @@
+import React, { FC } from "react";
 import {
   Box,
   chakra,
@@ -8,8 +9,9 @@ import {
   VisuallyHidden,
 } from "@chakra-ui/react";
 import { FaGithub } from "react-icons/fa";
+import type { SocialButtonProps } from "../../Types";
 
-const SocialButton = ({ children, label, href }) => {
+const SocialButton: FC<SocialButtonProps> = ({ children, label, href }) => {
   return (
     <chakra.button
       bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
@@ -33,7 +35,7 @@ const SocialButton = ({ children, label, href }) => {
   );
 };
 
-const Footer = () => {
+const Footer: FC = () => {
   return (
     <Box
       bg={useColorModeValue("gray.50", "gray.900")}
