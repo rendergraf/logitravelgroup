@@ -1,52 +1,49 @@
-import { useState, useEffect } from "react";
-import type { UseLocalStorageResult } from "../../Types";
+import { useEffect, useState } from 'react'
+import type { UseLocalStorageResult } from '../../Types'
 
 const useLocalStorage = <T>(itemName: string, initialValue: T): UseLocalStorageResult<T> => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [todos, setTodos] = useState<T>(initialValue);
-  let parseItem: T;
+	const [loading, setLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+	const [todos, setTodos] = useState<T>(initialValue)
 
-  useEffect(() => {
-    try {
-      const localStorageItem = localStorage.getItem(itemName);
+	useEffect(() => {
+		try {
+			const localStorageItem = localStorage.getItem(itemName)
 
-      if (!localStorageItem) {
-        localStorage.setTodos(itemName, JSON.stringify(initialValue));
-        parseItem = initialValue;
-      } else {
-        parseItem = JSON.parse(localStorageItem);
-      }
+			if (!localStorageItem) {
+				localStorage.setTodos(itemName, JSON.stringify(initialValue))
+				setTodos(initialValue)
+			} else {
+				const parseItem = JSON.parse(localStorageItem)
+				if (JSON.stringify(parseItem) !== JSON.stringify(todos)) {
+					setTodos(parseItem)
+				}
+			}
 
-      if (JSON.stringify(parseItem) !== JSON.stringify(todos)) {
-        setTodos(parseItem);
-      }
+			setLoading(false)
+		} catch (error) {
+			const newErrorMessage = `Error: ${error?.message || error}`
+			if (newErrorMessage !== error) {
+				setError(newErrorMessage)
+			}
+		}
+	}, [itemName, initialValue, todos])
 
-      setLoading(false);
-    } catch (error) {
-      const newErrorMessage = `Error: ${error?.message || error}`;
-      if (newErrorMessage !== error) {
-        setError(newErrorMessage);
-      }
-    }
-  }, [itemName, initialValue, todos]);
+	const saveTodos: UseLocalStorageResult<T>['saveTodos'] = (newItem) => {
+		try {
+			localStorage.setItem(itemName, JSON.stringify(newItem))
+			setTodos(newItem)
+		} catch (error) {
+			setError(`Error saving item: ${error?.message || error}`)
+		}
+	}
 
+	return {
+		todos,
+		saveTodos,
+		loading,
+		error,
+	}
+}
 
-  const saveTodos: UseLocalStorageResult<T>["saveTodos"] = (newItem) => {
-    try {
-      localStorage.setItem(itemName, JSON.stringify(newItem));
-      setTodos(newItem);
-    } catch (error) {
-      setError(`Error saving item: ${error?.message || error}`);
-    }
-  };
-
-  return {
-    todos,
-    saveTodos,
-    loading,
-    error,
-  };
-};
-
-export default useLocalStorage;
+export default useLocalStorage
